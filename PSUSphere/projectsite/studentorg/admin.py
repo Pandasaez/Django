@@ -12,7 +12,7 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ("lastname", "firstname",)
 @admin.register(OrgMember)
 class OrgMemberAdmin(admin.ModelAdmin):
-    list_display = ("student", "get_member_program", "organization", "data_joined",)
+    list_display = ("student", "get_member_program", "organization", "date_joined",)
     search_fields = ("lastname","firstname",)
 
     def get_member_program(self, obj):
