@@ -9,7 +9,7 @@ class BaseModel (models.Model):
         abstract = True
 
 class College(BaseModel):
-    collage_name = models.CharField(max_length=150)
+    college_name = models.CharField(max_length=150)
 
     def __str__ (self):
         return self.college_name
