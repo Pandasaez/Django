@@ -25,9 +25,8 @@ class OrganizationCreateView(CreateView):
 class OrganizationUpdateView(UpdateView):
     model = Organization
     form_class = OrganizationForm
-    template_name = 'org_add.html'
+    template_name = "org_edit.html"
     success_url = reverse_lazy('organization-list')
-      
 
 
 
