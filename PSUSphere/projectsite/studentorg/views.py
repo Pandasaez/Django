@@ -52,6 +52,13 @@ class OrganizationMemberList(ListView):
     template_name = 'orgmember_list.html'
     paginate_by = 5
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super(OrganizationMemberList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(student__firstname__icontains=query) | Q(student__lastname__icontains=query) | Q(student__middlename__icontains=query) | Q(organization__name__icontains=query) | Q(student__program__prog_name__icontains=query))
+        return qs
+
 class OrganizationMemberCreateView(CreateView):
     model = OrgMember
     form_class = OrganizationMemberForm
@@ -74,6 +81,13 @@ class StudentList(ListView):
     context_object_name = 'student'
     template_name = 'students_list.html'
     paginate_by = 5
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(StudentList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(student_id__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query) | Q(middlename__icontains=query) | Q(program__college__college_name__icontains=query) | Q(program__prog_name__icontains=query))
+        return qs
 
 class StudentCreateView(CreateView):
     model = Student
@@ -98,6 +112,13 @@ class CollegeList(ListView):
     template_name = 'college_list.html'
     paginate_by = 5
 
+    def get_queryset(self, *args, **kwargs):
+        qs = super(CollegeList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(college_name__icontains=query))
+        return qs
+
 class CollegeCreateView(CreateView):
     model = College
     form_class = CollegeForm
@@ -120,6 +141,13 @@ class ProgramList(ListView):
     context_object_name = 'program'
     template_name = 'program_list.html'
     paginate_by = 5
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super(ProgramList, self).get_queryset(*args, **kwargs)
+        if self.request.GET.get("q") is not None:
+            query = self.request.GET.get('q')
+            qs = qs.filter(Q(prog_name__icontains=query) | Q(college__college_name__icontains=query))
+        return qs
 
 class ProgramCreateView(CreateView):
     model = Program
