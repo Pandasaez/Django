@@ -21,8 +21,8 @@ from studentorg import views
 from django.contrib.auth import views as auth_views
 from studentorg.views import OrganizationMemberList, OrganizationMemberCreateView, OrganizationMemberUpdateView, OrganizationMemberDeleteView
 from studentorg.views import StudentList, StudentCreateView, StudentUpdateView, StudentDeleteView
-from studentorg.views import CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView
-from studentorg.views import ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView
+from studentorg.views import CollegeList, CollegeCreateView, CollegeUpdateView, CollegeDeleteView, bubble_chart_data
+from studentorg.views import ProgramList, ProgramCreateView, ProgramUpdateView, ProgramDeleteView, ChartView, timeline_chart_data, popular_organization_by_college
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -55,4 +55,11 @@ urlpatterns = [
 
     re_path(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     re_path(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('dashboard/', ChartView.as_view(), name='dashboard'),
+    path('timelinechart/', timeline_chart_data, name='timeline-chart'),
+    path('popularorgs', popular_organization_by_college, name='popularorgs-chart'),
+    path('bubble-chart-data/', views.bubble_chart_data, name='bubble-chart-data'),
+    path('scatter-plot-data/', views.scatter_plot_data, name='scatter-plot-data'),
+    path('membership-distribution/', views.membership_distribution_by_organization, name='membership-distribution'),
 ]
