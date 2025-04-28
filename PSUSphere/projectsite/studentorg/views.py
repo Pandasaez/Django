@@ -47,6 +47,39 @@ class ChartView(ListView):
     def get_queryset(self, *args, **kwargs):
         pass
 
+def scatter_plot_data(request):
+
+    data = (
+        College.objects.annotate(
+            org_count=Count('organization'),  
+            member_count=Count('organization__orgmember')  
+        )
+        .values('college_name', 'org_count', 'member_count')
+    )
+
+    
+    chart_data = []
+    for entry in data:
+        chart_data.append({
+            "x": entry['org_count'], 
+            "y": entry['member_count'],  
+            "college": entry['college_name']  
+        })
+
+    response_data = {
+        "datasets": [
+            {
+                "label": "Colleges",
+                "data": chart_data,
+                "backgroundColor": "rgba(75, 192, 192, 0.5)",
+                "borderColor": "rgba(75, 192, 192, 1)",
+                "borderWidth": 1,
+            }
+        ],
+    }
+
+    return JsonResponse(response_data)
+
 def popular_organization_by_college(request):
     data = (
         OrgMember.objects
@@ -98,7 +131,6 @@ def membership_distribution_by_organization(request):
         .order_by('-member_count')  
     )
 
-    # Prepare data for Chart.js
     labels = [entry['organization__name'] for entry in data]  
     counts = [entry['member_count'] for entry in data]  
 
@@ -165,39 +197,6 @@ def bubble_chart_data(request):
             }
         ],
         "labels": labels,  
-    }
-
-    return JsonResponse(response_data)
-
-def scatter_plot_data(request):
-
-    data = (
-        College.objects.annotate(
-            org_count=Count('organization'),  
-            member_count=Count('organization__orgmember')  
-        )
-        .values('college_name', 'org_count', 'member_count')
-    )
-
-    
-    chart_data = []
-    for entry in data:
-        chart_data.append({
-            "x": entry['org_count'], 
-            "y": entry['member_count'],  
-            "college": entry['college_name']  
-        })
-
-    response_data = {
-        "datasets": [
-            {
-                "label": "Colleges",
-                "data": chart_data,
-                "backgroundColor": "rgba(75, 192, 192, 0.5)",
-                "borderColor": "rgba(75, 192, 192, 1)",
-                "borderWidth": 1,
-            }
-        ],
     }
 
     return JsonResponse(response_data)
